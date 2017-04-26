@@ -7,352 +7,265 @@
 ### Installing the JavaScript SDK for Nether
 
 ## Usage
-
+To use the nether SDK include the nether script in your project. Reference the script in the webpage using 
+```html
+<script src="/scripts/nether.js"></script>
+```
+```javascript
+var config = {
+        netherClientId: '<client Id>',
+        netherClientSecret: '<client secret>',
+        facebookAppId: '<facebook app Id>',
+        netherBaseUrl: '<nether url>'
+    }
+    nether.init(config, facebookInitailised, netherInitialised);
+```
+To initialise Nether use the ***nether.init*** method passing the Nether configuration parameters and the callbacks. When nether is initialised, Nether checks to see if the user is logged into facebook and if so proceeds to authenticate the user with Nether.
+nether.init provides two callbacks: -
+### facebookInitialised(loggedin)
+The facebookInitialised callback provides you with information about whether the user is logged into facebook by parsing a boolean value.
+#### Example usage
+```html
+    <script>
+    function facebookInitialised(loggedin) {
+        if (connected === true) {
+            console.log('The user is logged into facebook')
+        } else {
+            console.log('The user is not logged into facebook');
+        }
+    }
+    </script>
+``` 
+### netherInitialised(loggedin)
+The netherInitialised callback provides you with information about whether the user is logged into nether. 
+#### Example usage
+```html
+<script>
+    function netherInitialised(loggedin) {
+        if (connected === true) {
+            console.log('The user is logged into nether')
+        } else {
+            console.log('The user is not logged into nether');
+        }
+    }
+    </script>
+```
 ### Analytics
+The analytics methods in Nether can be used to send analytics events. Nether supports the following methods: -
+#### Count 
+You can use the ***nether.analytics.count(name, value, args)*** method to send a count measurement to analytics.
+##### Example usage
+```javascript
+var args = {}
+args.data = 'my own value';
 
-#### Active sessions - daily
-You can use the ***Nether.Analytics.GetActiveSessionsDaily*** method to get the total active sessions per day. Returns an array of ActiveSession
-##### Example usage
-```javascript
-var sessions = Nether.Analytics.GetActiveSessionsDaily();
-console.log(sessions[0].ActiveSessions + ' for ' + sessions[0].Day + '-' + sessions[0].Month + '-' + sessions[0].Year);
+nether.analytics.count('shots', 10, args);
 ```
-#### Active sessions - monthly
-You can use the ***Nether.Analytics.GetActiveSessionsMonthly*** method to get the total active sessions per month. Returns an array of ActiveSession
-##### Example usage
-```javascript
-var sessions = Nether.Analytics.GetActiveSessionsMonthly();
-console.log(sessions[0].ActiveSessions + ' for ' + sessions[0].Month + '-' + sessions[0].Year);
-```
-#### Active sessions - yearly
-You can use the ***Nether.Analytics.GetActiveSessionsYearly*** method to get the total active sessions per year. Returns an array of ActiveSession
-##### Example usage
-```javascript
-var sessions = Nether.Analytics.GetActiveSessionsYearly();
-console.log(sessions[0].ActiveSessions + ' for ' + sessions[0].Year);
-```
+***name*** The name parameter is used to as a display name for the event.
+***value*** The count value for the event.
+***args.data*** The properties for the event.
 
-#### Active users - daily
-You can use the ***Nether.Analytics.GetActiveUsersDaily*** method to get the total active users per day. Returns an arry of ActiveUser
+#### Session Start
+You can use the ***nether.analytics.sessionStart(name, Id)*** method to send session start events.
 ##### Example usage
 ```javascript
-var users = Nether.Analytics.GetActiveUsersDaily();
-console.log(users[0].ActiveUsers + ' for ' + users[0].Day + '-' + users[0].Month + '-' + users[0].Year);
+nether.analytics.sessionStart('session started', 'de346ea2-4e59-49d8-863b-e0b2823b4ebd');
 ```
-#### Active users - monthly
-You can use the ***Nether.Analytics.GetActiveUsersMonthly*** method to get the total active users per month. Returns an arry of ActiveUser
+***name*** The name parameter is used to as a display name for the event.
+***id*** The event correlation Id
+
+#### Session Stop
+You can use the ***nether.analytics.sessionStop(Id)*** method to send session stopped events.
 ##### Example usage
 ```javascript
-var users = Nether.Analytics.GetActiveUsersMonthly();
-console.log(users[0].ActiveUsers + ' for ' + users[0].Month + '-' + users[0].Year);
+nether.analytics.sessionStop('de346ea2-4e59-49d8-863b-e0b2823b4ebd');
 ```
-#### Active users - yearly
-You can use the ***Nether.Analytics.GetActiveUsersYearly*** method to get the total active users per year. Returns an arry of ActiveUser
+***id*** The event correlation Id. This should be the same as the session start Id.
+
+#### Game Start
+You can use the ***nether.analytics.gameStart*** method to send game start events.
 ##### Example usage
 ```javascript
-var users = Nether.Analytics.GetActiveUsersYearly();
-console.log(users[0].ActiveUsers + ' for ' + users[0].Year);
+nether.analytics.gameStart();
 ```
-#### Durations - daily
-You can use the ***Nether.Analytics.GetDurationsDaily*** method to get the average duration per day. Returns an arry of Duration
+The game session Id and the gamer tag are logged as parameters when a game start event is created.
+
+#### Game Stop
+You can use the ***nether.analytics.gameStop*** method to send game stop events.
 ##### Example usage
 ```javascript
-var durations = Nether.Analytics.GetDurationsDaily();
-console.log(durations[0].AverageDuration + ' for ' + durations[0].Day + '-' + durations[0].Month + '-' + durations[0].Year);
+nether.analytics.gameStop();
 ```
-#### Durations - monthly
-You can use the ***Nether.Analytics.GetDurationsMonthly*** method to get the average duration per month. Returns an arry of Duration
+The game session Id is logged as a parameter when a game stop event is created.
+
+#### Level Start
+You can use the ***nether.analytics.levelStart(level)*** method to send level start events.
 ##### Example usage
 ```javascript
-var durations = Nether.Analytics.GetDurationsMonthly();
-console.log(durations[0].AverageDuration + ' for ' + durations[0].Month + '-' + durations[0].Year);
+nether.analytics.levelStart(1);
 ```
-#### Durations - yearly
-You can use the ***Nether.Analytics.GetDurationsYearly*** method to get the average duration per year. Returns an arry of Duration
+***level*** The level Id or the level name.
+The game session Id is logged as a parameter when a level start event is created.
+
+#### Level Finished
+You can use the ***nether.analytics.levelFinished(level)*** method to send level finished events.
 ##### Example usage
 ```javascript
-var durations = Nether.Analytics.GetDurationsYearly();
-console.log(durations[0].AverageDuration + ' for ' + durations[0].Year);
+nether.analytics.levelFinished(1);
 ```
-#### Game Durations - daily
-You can use the ***Nether.Analytics.GetGameDurationDaily*** method to get the average game duration per day. Returns an arry of Duration
+***level*** The level Id or the level name.
+The game session Id is logged as a parameter when a level finished event is created.
+
+#### Custom event
+You can use the ***nether.analytics.customEven(event)*** method to create custom events.
 ##### Example usage
 ```javascript
-var durations = Nether.Analytics.GetGameDurationDaily();
-console.log(durations[0].AverageDuration + ' for ' + durations[0].Day + '-' + durations[0].Month + '-' + durations[0].Year);
+var event = {}
+event.name = 'example event';
+event.value = 10;
+event.id = 'de346ea2-4e59-49d8-863b-e0b2823b4ebd';
+nether.analytics.customEvent(event)
 ```
-#### Game Durations - monthly
-You can use the ***Nether.Analytics.GetGameDurationMonthly*** method to get the average game duration per month. Returns an arry of Duration
-##### Example usage
-```javascript
-var durations = Nether.Analytics.GetGameDurationMonthly();
-console.log(durations[0].AverageDuration + ' for ' + durations[0].Month + '-' + durations[0].Year);
-```
-#### Game Durations - yearly
-You can use the ***Nether.Analytics.GetGameDurationYearly*** method to get the average game duration per year. Returns an arry of Duration
-##### Example usage
-```javascript
-var durations = Nether.Analytics.GetGameDurationYearly();
-console.log(durations[0].AverageDuration + ' for ' + durations[0].Year);
-```
-#### Level Drop Offs - daily
-You can use the ***Nether.Analytics.GetLevelDropOffsDaily*** method to get the total count of level drop offs by level and day. Returns an arry of DropOff
-##### Example usage
-```javascript
-var dropOffs = Nether.Analytics.GetLevelDropOffsDaily();
-console.log('Level ' + dropOffs[0].ReachedLevel + 'Drop offs: ' + dropOffs[0].TotalCount + ' for ' + dropOffs[0].Day + '-' + dropOffs[0].Month + '-' + dropOffs[0].Year);
-```
-#### Level Drop Offs - monthly
-You can use the ***Nether.Analytics.GetLevelDropOffsMonthly*** method to get the total count of level drop offs by level and month. Returns an arry of DropOff
-##### Example usage
-```javascript
-var dropOffs = Nether.Analytics.GetLevelDropOffsMonthly();
-console.log('Level ' + dropOffs[0].ReachedLevel + 'Drop offs: ' + dropOffs[0].TotalCount + ' for ' + dropOffs[0].Month + '-' + dropOffs[0].Year);
-```
-#### Level Drop Offs - yearly
-You can use the ***Nether.Analytics.GetLevelDropOffsYearly*** method to get the total count of level drop offs by level and year. Returns an arry of DropOff
-##### Example usage
-```javascript
-var dropOffs = Nether.Analytics.GetLevelDropOffsYearly();
-console.log('Level ' + dropOffs[0].ReachedLevel + 'Drop offs: ' + dropOffs[0].TotalCount + ' for ' + dropOffs[0].Year);
-```
-### Identiy
+### Identity
+
 
 ### Leaderboard
 
 #### Get Leaderboard
-You can use the ***Nether.Leaderboard.GetLeaderboard*** method to get the currently configured Leaderboard. Returns an array of Leaderboard
+You can use the ***nether.leaderboard.getAllLeaderboards(callback)*** method to get the currently configured Leaderboard.
 ##### Example usage
 ```javascript
-var leaderboard = Nether.Leaderboard.GetLeaderboard();
+showLeaderboards = function(leaderboards) {
+    for (let leaderboard of leaderboards) {
+        var leaderboardName = leaderboard.name;
+        var leaderboardUrl = leaderboard._link;
+    }
+}
+nether.leaderboard.getAllLeaderboards(showLeaderboards);
+
 ```
 ### Get Leaderboard by name
-You can use the ***Nether.Leaderboard.GetLeaderboardFromName*** method to get all of the gammer tags and highscores for the specified Leaderboard. Returns a LeaderboardSummary object
+You can use the ***nether.leaderboard.getLeaderboard(leaderboardname)*** method to get all of the gamer tags and highscores for the specified Leaderboard.
 #### Example usage
 ```javascript
-var leaderboardScores = Nether.Leaderboard.GetLeaderboard('testboard');
+showLeaderboard = function(leaderboard) {
+    for (let entry of leaderboard.entries) {
+        var gamertag = entry.gamertag;
+        var isCurrentPlayer = entry.isCurrentPlayer;
+        var rank = entry.rank;
+        var score = entry.score;
+    }
+    var currentPlayerGamerTag = leaderboard.currentPlayer.gamertag;
+    var currentPlayerRank = leaderboard.currentPlayer.rank;
+    var currentPlayerScore = leaderboard.currentPlayer.score;
+}
+nether.leaderboard.getLeaderboard('default', showLeaderboard);
+
 ```
 
 ### Put score
-You can use the ***Nether.Score.PutScore*** method to add a players score.
+You can use the ***nether.score.addScore(score, callback)*** method to add a players score.
 #### Example usage
 ```javascript
-Nether.Scores.AddScore('UK', 100, 'customTag');
-Nether.Scores.AddScore('UK', 100);
+scoreAdded = function(scoreAdded) {
+    if (scoreAdded === false) 
+        console.log('Unable to add score');
+}
+nether.scores.addScore(100, scoreAdded);
 ```
 
 ### Drop scores
-You can use the ***Nether.Score.DropMyScore*** method to delete all scores for the logged in player
+You can use the ***nether.score.dropMyScore(callback)*** method to delete all scores for the logged in player.
 #### Example usage
 ```javascript
-Nether.Scores.DropMyScore();
+scoreDropped = function(scoreDropped) {
+    if (scoreDropped === false) 
+        console.log('Unable to drop score');
+}
+nether.scores.dropMyScore(scoreDropped);
 ```
 ### Player Management
 
 ### Get the current Player
-You can use the ***Nether.Player.GetCurrentPlayer*** method to get the current player details. Returns a Player object
+You can use the ***nether.player.getPlayer(callback)*** method to get the current player details.
 #### Example usage
 ```javascript
-var player = Nether.Player.GetCurrentPlayer();
+showCurrentPlayer = function(player) {
+    console.log(player.gamertag);
+    console.log(player.country);
+    console.log(player.customTag);
+}
+nether.player.getPlayer(showCurrentPlayer);
 ```
 ### Put Player
-You can use the ***Nether.Player.PutCurrentPlayer*** method to update Players details
+You can use the ***nether.player.setPlayer(country, gamerTag, customTag, callback)*** method to update Players details.
 #### Example usage
 ```javascript
-Nether.Player.PutCurrentPlayer('gammerTag', 'country', 'customTag');
-```
-### Add current player to group
-You can use the ***Nether.Player.AddCurrentPlayerToGroup*** method to add the current player to a group
-#### Example usage
-```javascript
-Nether.Player.AddCurrentPlayerToGroup('groupName');
+playerSet = function() {
+    console.log('player updated');
+}
+nether.player.setPlayer('uk', 'testplayer' 'this player is great', playerSet);
 ```
 
-### Delete current player
-You can use the ***Nether.Player.DeleteCurrentPlayer*** method to delete the current player
+### Delete player
+You can use the ***nether.player.deleteCurrentPlayer(callback)*** method to delete the current player.
 #### Example usage
 ```javascript
-Nether.Player.DeleteCurrentPlayer();
+playerDeleted = function(deleted) {
+    if (deleted === true)
+        console.log('player deleted');
+}
+nether.player.deletePlayer(playerDeleted);
 ```
 
-### Get current player state
-You can use the ***Nether.Player.GetCurrentPlayerState*** method to get the state of the current player. Returns a PlayerState object
+### Get player state
+You can use the ***nether.player.getState(callback)*** method to get the state of the current player.
 #### Example usage
 ```javascript
-var playerState = Nether.Player.GetCurrentPlayerState();
+showState = function(gamerTag, state) {
+    console.log(gamerTag);
+    console.log(state);
+}
+nether.player.getState(showState);
 ```
 
-### Put current player state
-You can use the ***Nether.Player.PutCurrentPlayerState*** method to update the current players player state.
+### Set player state
+You can use the ***nether.player.setState(state, callback)*** method to update the current players player state.
 #### Example usage
 ```javascript
-Nether.Player.PutCurrentPlayerState('gamerTag', 'state');
-```
-
-### Get Player Groups
-You can use the ***Nether.Player.GetPlayerGroups*** method to get the groups for the current player. Returns an array of Groups
-#### Example usage
-```javascript
-var groups = Nether.Player.GetPlayerGroups();
+checkState = function(state) {
+    console.log(state);
+}
+nether.player.setState('state', checkState);
 ```
 
 ## Player Identity
 
-#### Get Gamer Tag From Player Id
-You can use the ***Nether.Player.Identity.GetGammerTag*** method to get the players gammer tag from their player Id. Returns a string with the gamer tag
+### Facebook login
+You can use the ***nether.player.identity.facebookLogin(callback)*** method to invoke a facebook login. 
 #### Example usage
-```javascript
-var gamerTag = Nether.Player.Identity.GetGammerTag('playerId');
-```
-
-#### Set Gamer Tag From Player Id
-You can use the ***Nether.Player.Identity.SetGammerTag*** method to set the players gammer tag
-#### Example usage
-```javascript
-Nether.Player.Identity.SetGammerTag('playerid', 'gammerTag');
-```
-## Administrate players
-
-### Get Players
-You can use the ***Nether.Player.Admin.GetPlayers*** method to get a list of players. Returns an array of Player
-#### Example usage
-```javascript
-var players = Nether.Player.Admin.GetPlayers();
-```
-
-### Get Player
-You can use the ***Nether.Player.Admin.GetPlayer*** method to get a player by their gammer tag. Returns a Player object
-#### Example usage
-```javascript
-var player = Nether.Player.Admin.GetPlayer('gamerTag');
-```
-
-### Create a new Player
-You can use the ***Nether.Player.Admin.CreatePlayer*** method to create a new player. QUESTION IS USERID = PLAYERID. NOT SURE WHAT THIS IS RETURNING
-#### Example usage
-```javascript
-Nether.Player.Admin.CreatePlayer('userid', 'gamerTag', 'country', 'customTag');
-```
-
-### Get player state
-You can use the ***Nether.Player.Admin.GetPlayerState*** method to get the state of a player. Returns a PlayerState object
-#### Example usage
-```javascript
-var playerState = Nether.Player.Admin.GetPlayerState('gamerTag');
-```
-
-### Post player state
-You can use the ***Nether.Player.Admin.PostPlayerState method*** to set the state of a player
-#### Example usage
-```javascript
-Nether.Player.Admin.PostPlayerState('gamerTag', 'playerState');
-```
-
-### Get Player groups
-You can use the ***Nether.Player.Admin.GetPlayerGroups*** method to get the groups for a player. Returns an array of Group
-#### Example usage
-```javascript
-var groups = Nether.Player.Admin.GetPlayerGroups('gamerTag');
-```
-
-### Add player to a group
-You can use the ***Nether.Player.Admin.AddPlayerToGroup*** method to add the player to a group
-#### Example usage
-```javascript
-Nether.Player.Admin.AddPlayerToGroup('gamerTag', 'groupName');
-```
-
-### Delete player from a group
-You can use the ***Nether.Player.Admin.DeletePlayerFromGroup*** method to delete a player from a group
-#### Example usage
-```javascript
-Nether.Player.Admin.DeletePlayerFromGroup('gamerTag', 'groupName');
-```
-
-## Groups
-
-### Get Group Players
-You can use the ***Nether.Groups.GetGroupPlayers*** method to get players in a group. Returns an array of string
-#### Example usage
-```javascript
-var players = Nether.Groups.GetGroupPlayers('groupName');
-```
-
-## Administrate Groups
-
-### Get Group
-You can use the ***Nether.Groups.Admin.GetGroup*** method to get a group. Returns a Group object
-#### Example usage
-```javascript
-var group = Nether.Groups.Admin.GetGroup();
-```
-
-### Put Group
-You can use the ***Nether.Groups.Admin.PutGroup*** method to create a new group
-#### Example usage
-```javascript
-Nether.Groups.Admin.PutGroup('groupName', 'groupType', 'description', gamerTag[]);
-```
-
-### Get Group Players
-You can use the ***Nether.Groups.Admin.GetGroupPlayers*** method to get players in a group. Returns an array of string
-#### Example usage
-```javascript
-var players = Nether.Groups.Admin.GetGroupPlayers('groupName');
-```
-
-## Objects
-### ActiveSession
-```javascript
-class ActiveSession {
-    constructor(year, month, day, activeSessions);
+```html
+<input type="button" onclick="loginUser()" value="Login to facebook" />
+<script>
+checkLogin = function(status) {
+    if (status === true) 
+        console.log('User logged into facebook');
 }
-```
-### ActiveUser
-```javascript
-class ActiveUser {
-    constructor(year, month, day, activeUsers);
+loginUser = function() {
+    nether.player.Identity.facebookLogin(checkLogin);
 }
+</script>
 ```
-### Duration
+
+### authWithFacebookToken
+You can use the ***nether.player.identity.authWithFacebookToken(callback)*** method to authenticate a user logged into facebook with Nether.
+The user must be logged into facebook first before calling this method.
+#### Example usage
 ```javascript
-class Duration {
-    constructor(year, month, day, AverageDuration, name);
+checkAuth = function(status) {
+    if (status === true) 
+        console.log('User authenticated with nether');
 }
+nether.player.identity.authWithFacebookToken(checkAuth);
 ```
-### DropOff
-```javascript
-class DropOff {
-    constructor(year, month, day, reachedLevel, totalCount);
-}
-```
-### Leaderboard
-```javascript
-class Leaderboard {
-    constructor(name, link);
-}
-```
-### LeaderboardSummary
-```javascript
-class LeaderboardSummary {
-    constructor(gamerTag, score, rank, isCurrentPlayer);
-}
-```
-### Player
-```javascript
-class Player {
-    constructor(gamerTag, country, customTag);
-}
-```
-### PlayerState
-```javascript
-class PlayerState {
-    constructor(gamerTag, state);
-}
-```
-### Group
-```javascript
-class Group {
-    constructor(name, customType, description);
-}
-```
+
